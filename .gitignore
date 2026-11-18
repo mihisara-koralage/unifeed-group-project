@@ -1,0 +1,8 @@
+venv/
+.env
+.pg-password-*.tmp
+__pycache__/
+*.py[cod]
+media/*
+!media/**/
+!media/**/.gitkeep
