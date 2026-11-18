@@ -1,0 +1,1 @@
+<span class="avatar {% if large %}avatar-large{% endif %}" aria-hidden="true">{% if person.avatar %}<img src="{{ person.avatar.url }}" alt="" loading="lazy">{% else %}{{ person.email|slice:':1'|upper }}{% endif %}</span>

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}My profile{% endblock %}
+{% block breadcrumb %}My profile{% endblock %}
+{% block content %}
+<section class="profile-layout">
+  <div class="page-intro"><span class="eyebrow">A LITTLE ABOUT YOU</span><h1>Your campus identity<span class="orange-dot">.</span></h1><p>Let your community get to know the person behind the account.</p></div>
+  <div class="profile-grid">
+    <form class="profile-editor card" method="post" enctype="multipart/form-data" data-profile-form>
+      {% csrf_token %}
+      <h2 class="profile-section-title">Make it feel like you.</h2>
+      <p>Your bio and photo help your campus put a face to a name.</p>
+      {% include 'components/form_fields.html' %}
+      <img class="avatar-preview" data-avatar-preview alt="New profile photo preview" hidden>
+      <p class="sr-only" role="status" data-avatar-status></p>
+      <button class="button button-green" type="submit">Save profile <svg class="icon"><use href="#i-check"/></svg></button>
+    </form>
+    <aside class="profile-summary card">
+      {% include 'components/avatar.html' with person=user large=True %}
+      <h2>{{ user.get_full_name|default:user.email }}</h2>
+      <span class="role-label">{{ user.get_role_display }}</span>
+      <p>{{ user.bio|default:'A new voice in the campus community.' }}</p>
+      <dl class="profile-fields"><div><dt>Email address</dt><dd>{{ user.email }}</dd></div><div><dt>Member since</dt><dd>{{ user.date_joined|date:'F Y' }}</dd></div><div><dt>Account</dt><dd>{% if user.is_verified %}Verified{% else %}Not verified{% endif %}</dd></div></dl>
+    </aside>
+  </div>
+</section>
+{% endblock %}
