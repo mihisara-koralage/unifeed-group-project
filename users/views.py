@@ -55,3 +55,21 @@ def profile_view(request):
         form = ProfileForm(instance=request.user)
 
     return render(request, 'users/profile.html', {'form': form})
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated.')
+            return redirect('users:profile')
+    else:
+        form = ProfileForm(instance=request.user)
+
+    posts = request.user.posts.all()[:5]
+
+    return render(request, 'users/profile.html', {
+        'form':  form,
+        'posts': posts,
+    })
