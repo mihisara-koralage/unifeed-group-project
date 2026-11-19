@@ -31,8 +31,7 @@ class UsersFrontendTests(TestCase):
             'password2':self.password, 'role':'admin', 'is_superuser':True,
         })
         self.assertEqual(response.status_code, 302)
-        # Preserve the existing backend's landing route; do not build Module 2.
-        self.assertEqual(response.url, reverse('feed:home'))
+        self.assertRedirects(response, reverse('users:profile'))
         new_user = get_user_model().objects.get(email='new@example.test')
         self.assertEqual(new_user.role, 'student')
         self.assertFalse(new_user.is_superuser)
@@ -51,9 +50,14 @@ class UsersFrontendTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Invalid email or password.')
         response = self.client.post(reverse('users:login'), {'username':self.student.email, 'password':self.password})
-        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('users:profile'))
         self.assertEqual(int(self.client.session['_auth_user_id']), self.student.pk)
         self.assertEqual(self.client.get(reverse('users:profile')).status_code, 200)
+
+    def test_signed_in_auth_pages_redirect_to_profile(self):
+        self.client.force_login(self.student)
+        for route in ['users:login', 'users:register']:
+            self.assertRedirects(self.client.get(reverse(route)), reverse('users:profile'))
 
     def test_profile_requires_login(self):
         response = self.client.get(reverse('users:profile'))
