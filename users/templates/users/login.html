@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Sign in{% endblock %}
+{% block breadcrumb %}Welcome back{% endblock %}
+{% block content %}
+<div class="auth-layout"><section class="auth-story"><span class="eyebrow">YOUR CAMPUS, CONNECTED</span><h1>A familiar place.<br>A fresh conversation<span class="orange-dot">.</span></h1><p>The updates you missed, the people you know, and the little moments that make campus feel like home.</p><div class="auth-art" aria-hidden="true"><span>✳</span><p>A little more sharing.<br>A lot more belonging.</p></div></section><section class="auth-card card" aria-labelledby="login-title"><h2 id="login-title">Welcome back.</h2><p class="auth-subtitle">Sign in and pick up the conversation.</p><form method="post">{% csrf_token %}{% include 'components/form_fields.html' %}<button class="button button-green button-full" type="submit">Sign in <svg class="icon"><use href="#i-arrow"/></svg></button></form><p class="auth-assurance"><svg class="icon"><use href="#i-lock"/></svg>Use the email address you registered with.</p><p class="auth-switch">New around here? <a href="{% url 'users:register' %}">Join your campus</a></p></section></div>
+{% endblock %}
