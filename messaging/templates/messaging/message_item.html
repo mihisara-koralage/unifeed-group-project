@@ -1,0 +1,9 @@
+{% if message.sender_id == user.pk %}
+  {% if not message.is_deleted_by_sender %}
+  <article class="chat-message mine" id="message-{{ message.pk }}" data-message-id="{{ message.pk }}"><div class="message-body"><div class="message-bubble">{{ message.content|linebreaksbr }}</div><div class="message-meta"><time datetime="{{ message.created_at|date:'c' }}" title="{{ message.created_at|date:'M j, Y, H:i' }}">{{ message.created_at|date:'H:i' }}</time><span>{% if message.is_read %}Seen{% else %}Sent{% endif %}</span><form action="{% url 'messaging:delete_message' message.pk %}" method="post">{% csrf_token %}<button class="hide-message" type="submit" aria-label="Hide your message from {{ message.created_at|date:'H:i' }} for yourself"><svg class="icon"><use href="#i-trash"/></svg><span>Hide for me</span></button></form></div></div></article>
+  {% endif %}
+{% else %}
+  {% if not message.is_deleted_by_recipient %}
+  <article class="chat-message" id="message-{{ message.pk }}" data-message-id="{{ message.pk }}">{% include 'components/avatar.html' with person=message.sender %}<div class="message-body"><div class="message-bubble">{{ message.content|linebreaksbr }}</div><div class="message-meta"><time datetime="{{ message.created_at|date:'c' }}" title="{{ message.created_at|date:'M j, Y, H:i' }}">{{ message.created_at|date:'H:i' }}</time><form action="{% url 'messaging:delete_message' message.pk %}" method="post">{% csrf_token %}<button class="hide-message" type="submit" aria-label="Hide received message from {{ message.created_at|date:'H:i' }} for yourself"><svg class="icon"><use href="#i-trash"/></svg><span>Hide for me</span></button></form></div></div></article>
+  {% endif %}
+{% endif %}

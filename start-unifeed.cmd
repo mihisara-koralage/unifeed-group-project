@@ -13,4 +13,10 @@ if errorlevel 1 (
 call venv\Scripts\activate.bat
 python manage.py check
 if errorlevel 1 exit /b 1
-python manage.py runserver 127.0.0.1:8000
+if not exist "venv\Scripts\daphne.exe" (
+  echo Install the project packages first: venv\Scripts\python.exe -m pip install -r requirements.txt
+  pause
+  exit /b 1
+)
+echo Open http://127.0.0.1:8000/ in your browser. Keep this window open for live chat.
+venv\Scripts\daphne.exe -b 127.0.0.1 -p 8000 config.asgi:application
