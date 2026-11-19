@@ -8,17 +8,21 @@
   <title>{% block title %}Your campus, connected{% endblock %} · UniFeed</title>
   <link rel="icon" href="{% static 'images/unifeed-mark.svg' %}" type="image/svg+xml">
   <link rel="stylesheet" href="{% static 'css/users.css' %}">
+  <link rel="stylesheet" href="{% static 'css/community.css' %}">
   <script src="{% static 'js/users.js' %}" defer></script>
+  {% block head %}{% endblock %}
 </head>
-<body>
+<body class="{% block page_class %}{% endblock %}">
   <a class="skip-link" href="#main-content">Skip to content</a>
   {% include 'components/icons.html' %}
   <div class="users-shell">
-    <header class="site-header">
-      <a class="brand" href="{% if user.is_authenticated %}{% url 'users:profile' %}{% else %}{% url 'users:login' %}{% endif %}" aria-label="UniFeed home"><span class="brand-mark">u<span>f</span></span>uni<span>feed</span><span class="brand-dot">.</span></a>
+    <header class="site-header {% if user.is_authenticated %}is-signed-in{% endif %}">
+      <a class="brand" href="{% if user.is_authenticated %}{% url 'feed:home' %}{% else %}{% url 'users:login' %}{% endif %}" aria-label="UniFeed home"><span class="brand-mark">u<span>f</span></span>uni<span>feed</span><span class="brand-dot">.</span></a>
       <span class="header-note"><span class="live-dot"></span>YOUR CAMPUS, A LITTLE CLOSER</span>
       <nav class="header-nav" aria-label="Account navigation">
         {% if user.is_authenticated %}
+          <a class="nav-link {% if request.resolver_match.namespace == 'feed' %}active{% endif %}" href="{% url 'feed:home' %}"><svg class="icon"><use href="#i-grid"/></svg>Feed</a>
+          <a class="nav-link {% if request.resolver_match.namespace == 'messaging' %}active{% endif %}" href="{% url 'messaging:inbox' %}"><svg class="icon"><use href="#i-chat"/></svg>Messages</a>
           <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'users:profile' %}">{% include 'components/avatar.html' with person=user %}<span>My profile</span></a>
           <form action="{% url 'users:logout' %}" method="post">{% csrf_token %}<button type="submit" class="nav-link"><svg class="icon"><use href="#i-logout"/></svg>Sign out</button></form>
         {% else %}
@@ -28,10 +32,11 @@
       </nav>
     </header>
     <div class="breadcrumb">Community <span>/</span> <strong>{% block breadcrumb %}Welcome{% endblock %}</strong></div>
-    {% if messages %}<div class="messages" aria-live="polite">{% for message in messages %}<div class="notice {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% block notifications %}{% if messages %}<div class="messages" aria-live="polite">{% for message in messages %}<div class="notice {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}{% endblock %}
     <main id="main-content" tabindex="-1">{% block content %}{% endblock %}</main>
     <footer class="page-footer"><span>UniFeed · A little more connected.</span><span>Your campus. Your community.</span></footer>
   </div>
+  <div id="community-toast" class="community-toast" role="status" aria-live="polite" hidden></div>
   {% block scripts %}{% endblock %}
 </body>
 </html>

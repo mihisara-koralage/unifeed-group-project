@@ -1,0 +1,9 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}#{{ hashtag.name }}{% endblock %}
+{% block page_class %}community-page{% endblock %}
+{% block breadcrumb %}Explore hashtags{% endblock %}
+{% block head %}<script src="{% static 'js/feed.js' %}" defer></script>{% endblock %}
+{% block content %}
+<div class="feed-layout" data-feed data-current-user="{{ user.pk }}"><section class="feed-main"><a class="back-link" href="{% url 'feed:home' %}">← Back to campus feed</a><div class="hashtag-hero"><span class="eyebrow">ONE TOPIC. MANY VOICES.</span><h1>#{{ hashtag.name }}</h1><p>{{ posts|length }} post{{ posts|length|pluralize }} in this campus conversation.</p></div><div class="section-heading"><h2>In the conversation</h2><span class="small muted">Latest first</span></div>{% include 'feed/filters.html' %}<div class="post-list" data-post-list>{% for post in posts %}{% include 'feed/post_card.html' %}{% empty %}<div class="community-empty card"><span class="empty-flower">#</span><h3>A conversation waiting to happen.</h3><p>No posts use this hashtag yet.</p><a class="text-button" href="{% url 'feed:home' %}#composer">Back to the feed</a></div>{% endfor %}</div><div class="community-empty card" data-filter-empty hidden><h3>No matching posts.</h3><p>Try another search or view all posts.</p><button class="text-button" type="button" data-clear-filters>Clear filters</button></div></section>{% include 'feed/sidebar.html' %}</div>
+{% endblock %}
+{% block scripts %}{% include 'feed/like_script.html' %}{% endblock %}

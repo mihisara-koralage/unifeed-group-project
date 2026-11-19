@@ -14,8 +14,8 @@ committed `users` forms, views, model and named URL routes.
 
 CSS, password visibility toggles and avatar preview are scoped to accounts.
 Forms submit normally and still work with JavaScript disabled. Registration
-cannot choose or elevate roles. There are no feed templates, AJAX likes, post
-composer or other Module 2 features in this change.
+cannot choose or elevate roles. Feed and messaging are documented separately in
+`FEED_MESSAGING_FRONTEND.md`; they share the account navigation and visual style.
 
 ## Validation
 

@@ -1,0 +1,19 @@
+<script>
+  document.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-like-url]');
+    if (!button || button.disabled) return;
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    try {
+      const token = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+      const response = await fetch(button.dataset.likeUrl, {method:'POST', credentials:'same-origin', headers:{'X-CSRFToken':token, 'Accept':'application/json'}});
+      if (response.redirected || !response.headers.get('content-type')?.includes('application/json')) throw new Error('Your session may have expired. Refresh and sign in again.');
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Could not update your like. Please try again.');
+      button.setAttribute('aria-pressed', String(data.liked));
+      button.querySelector('[data-like-count]').textContent = data.like_count;
+      button.querySelector('[data-like-label]').textContent = data.liked ? 'Liked' : 'Like';
+    } catch (error) { window.communityToast(error.message || 'Connection lost. Please try again.'); }
+    finally { button.disabled = false; button.removeAttribute('aria-busy'); }
+  });
+</script>

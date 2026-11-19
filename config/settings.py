@@ -151,6 +151,10 @@ CHANNEL_LAYERS = {'default': {
     'BACKEND': 'channels_redis.core.RedisChannelLayer',
     'CONFIG': {'hosts': [('127.0.0.1', 6379)]},
 }}
+# A single-process local ASGI server can run chat without a separate Redis server.
+# Redis remains the default and must be used when running multiple processes.
+if DEBUG and os.getenv('CHANNEL_BACKEND', 'redis').lower() == 'memory':
+    CHANNEL_LAYERS = {'default': {'BACKEND': 'channels.layers.InMemoryChannelLayer'}}
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'

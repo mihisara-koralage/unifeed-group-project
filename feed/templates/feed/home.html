@@ -1,0 +1,30 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Campus feed{% endblock %}
+{% block page_class %}community-page{% endblock %}
+{% block breadcrumb %}Campus feed{% endblock %}
+{% block head %}<script src="{% static 'js/feed.js' %}" defer></script>{% endblock %}
+{% block content %}
+<div class="feed-layout" data-feed data-current-user="{{ user.pk }}">
+  <section class="feed-main">
+    <div class="community-intro"><div><span class="eyebrow">THE CAMPUS COMMON ROOM</span><h1>Hey, campus<span class="orange-dot">.</span></h1><p>A place for your ideas, updates, and in-between moments.</p></div><span class="intro-flower" aria-hidden="true">✳</span></div>
+    <section class="feed-banner"><div><span class="eyebrow">GOOD THINGS HAPPEN TOGETHER</span><h2>Your campus.<br>Your people.</h2><p>Big ideas. Small moments.<br>A little more connection, every day.</p><a href="{% if form %}#composer{% else %}#campus-posts{% endif %}">Find your campus moment <svg class="icon"><use href="#i-arrow"/></svg></a></div><div class="campus-illustration" aria-hidden="true"><span>✳</span><svg viewBox="0 0 230 200"><path d="M15 175h200" stroke="currentColor" stroke-width="2"/><path d="m45 69 70-35 70 35v13H45Z" fill="#c9d98d" stroke="currentColor" stroke-width="2"/><path d="M58 84h114v79H58Z" fill="#f9f9eb" stroke="currentColor" stroke-width="2"/><path d="M70 84v79m29-79v79m32-79v79m28-79v79" stroke="currentColor" stroke-width="9"/><path d="M47 163h136v12H47Z" fill="#c9d98d" stroke="currentColor" stroke-width="2"/><circle cx="115" cy="63" r="7" fill="#e9efc9" stroke="currentColor" stroke-width="2"/><path d="M30 175v-37m0 19c-25-10-22-31-2-16 4-30 28-26 14-6 23-2 17 19-12 22M201 175v-31m0 13c-21-8-23-25-4-14 4-23 25-21 13-5 20-2 13 16-9 19" fill="#7c9674" stroke="currentColor" stroke-width="2"/></svg><i>a space to belong ↗</i></div></section>
+    {% if form %}
+    <section class="composer card" id="composer" aria-labelledby="composer-title"><div class="composer-heading"><h2 id="composer-title">What’s happening?</h2><span>YOUR VOICE BELONGS HERE</span></div><form method="post" enctype="multipart/form-data" data-composer>{% csrf_token %}
+      {% if form.non_field_errors %}<div class="field-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+      <div class="composer-input">{% include 'components/avatar.html' with person=user %}<div><label class="sr-only" for="{{ form.content.id_for_label }}">Share a campus update</label>{{ form.content }}{% if form.content.errors %}<div class="field-errors" role="alert">{{ form.content.errors }}</div>{% endif %}</div></div>
+      <div class="photo-preview" data-photo-preview hidden><img data-photo-image alt="Selected photo preview"><button class="icon-button remove-photo" type="button" aria-label="Remove selected photo" data-remove-photo><svg class="icon"><use href="#i-close"/></svg></button></div>
+      {% if form.image.errors %}<div class="field-errors" role="alert">{{ form.image.errors }}</div>{% endif %}
+      <div class="composer-actions"><div class="upload-control"><label for="{{ form.image.id_for_label }}"><svg class="icon"><use href="#i-image"/></svg>Add photo</label><span class="file-input">{{ form.image }}</span><small>Try a #hashtag</small></div><div><span data-content-count class="content-count">0 / 1000</span><button class="button button-green" type="submit">Post <svg class="icon"><use href="#i-arrow"/></svg></button></div></div><p class="sr-only" aria-live="polite" data-photo-status></p>
+    </form></section>
+    {% else %}<p class="notice">You’re browsing as {{ user.get_role_display|lower }}. Posting and liking are available to student accounts.</p>{% endif %}
+    <section id="campus-posts" aria-labelledby="posts-title"><div class="section-heading"><h2 id="posts-title">Around campus <span class="count-pill">{{ posts|length }}</span></h2><span class="small muted"><span class="live-dot"></span> Latest first</span></div>
+      {% include 'feed/filters.html' %}
+      <div class="post-list" data-post-list>{% for post in posts %}{% include 'feed/post_card.html' %}{% empty %}<div class="community-empty card"><span class="empty-flower">✳</span><h3>Every community starts with a hello.</h3><p>{% if form %}Share the first campus moment using the box above.{% else %}No posts yet. Check back soon for campus updates.{% endif %}</p></div>{% endfor %}</div>
+      <div class="community-empty card" data-filter-empty hidden><svg class="icon"><use href="#i-search"/></svg><h3>No posts found.</h3><p>Try a different search or switch back to all posts.</p><button class="text-button" type="button" data-clear-filters>Clear filters</button></div>
+      {% if posts %}<p class="feed-end">You’re all caught up <span>✳</span> Go make a campus moment.</p>{% endif %}
+    </section>
+  </section>
+  {% include 'feed/sidebar.html' %}
+</div>
+{% endblock %}
+{% block scripts %}{% include 'feed/like_script.html' %}{% endblock %}
