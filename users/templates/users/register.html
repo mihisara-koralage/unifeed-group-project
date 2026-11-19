@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Join your campus{% endblock %}
+{% block breadcrumb %}Join the community{% endblock %}
+{% block content %}
+<div class="auth-layout"><section class="auth-story"><span class="eyebrow">THERE’S A PLACE FOR YOU HERE</span><h1>Your next campus<br>connection starts here<span class="orange-dot">.</span></h1><p>A good idea. A photo from your day. A question for your community. Whatever it is, we’re glad you’re bringing it.</p><div class="auth-art" aria-hidden="true"><span>✳</span><p>More than a feed.<br>Your little campus corner.</p></div></section><section class="auth-card card" aria-labelledby="register-title"><h2 id="register-title">Make yourself at home.</h2><p class="auth-subtitle">Create your student account to get started.</p><form method="post">{% csrf_token %}{% include 'components/form_fields.html' %}<button class="button button-green button-full" type="submit">Join UniFeed <svg class="icon"><use href="#i-arrow"/></svg></button></form><p class="auth-switch">Already part of the community? <a href="{% url 'users:login' %}">Sign in</a></p></section></div>
+{% endblock %}
