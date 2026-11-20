@@ -1,0 +1,45 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Study resources{% endblock %}
+{% block page_class %}community-page resources-page{% endblock %}
+{% block breadcrumb %}Study resources{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'css/resources.css' %}">{% endblock %}
+{% block content %}
+<div class="resource-directory">
+  <header class="resource-intro">
+    <div><span class="eyebrow">A LITTLE KNOWLEDGE GOES A LONG WAY</span><h1>Good things to learn<span class="orange-dot">.</span></h1><p>Notes, past papers and useful finds. Shared by your campus, for your campus.</p></div>
+    {% if user.is_student %}<a class="button button-green" href="{% url 'resources:submit' %}"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Share a resource</a>{% endif %}
+  </header>
+  <div class="resource-layout">
+    <aside class="resource-sidebar" aria-label="Resource categories">
+      <nav class="card resource-categories" aria-labelledby="categories-title">
+        <span class="eyebrow">FIND YOUR NEXT GOOD READ</span><h2 id="categories-title">Browse by category</h2>
+        <a class="resource-category {% if not active_cat %}is-active{% endif %}" {% if not active_cat %}aria-current="page"{% endif %} href="{% url 'resources:list' %}{% if search %}?search={{ search|urlencode }}{% endif %}"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg>All resources</a>
+        {% for value, label in categories %}<a class="resource-category {% if active_cat == value %}is-active{% endif %}" {% if active_cat == value %}aria-current="page"{% endif %} href="{% url 'resources:list' %}?category={{ value|urlencode }}{% if search %}&amp;search={{ search|urlencode }}{% endif %}"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>{{ label }}</a>{% endfor %}
+      </nav>
+      <section class="resource-note"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg><h2>Found something helpful?</h2><p>A good resource can make someone's study day a little easier.</p>{% if user.is_student %}<a class="text-button" href="{% url 'resources:submit' %}">Pass it on <span aria-hidden="true">&rarr;</span></a>{% else %}<p>Student accounts can share resources. You're welcome to browse and explore.</p>{% endif %}</section>
+    </aside>
+    <section class="resource-results" aria-labelledby="resources-title">
+      <div class="resource-banner"><div><span class="eyebrow">THE SHARED STUDY SHELF</span><h2>A head start,<br>from someone who's been there.</h2><p>One helpful link. A whole new perspective.</p></div><svg class="resource-books" viewBox="0 0 180 150" aria-hidden="true"><rect x="20" y="20" width="30" height="112" rx="5" fill="#a9be77"/><rect x="54" y="8" width="36" height="124" rx="5" fill="#f8f7e8"/><path d="m104 30 27-9 34 100-27 9Z" fill="#dfa17a"/><g fill="none" stroke="#36533b" stroke-width="2"><path d="M17 134h151M28 36h14m-14 8h14M63 26h18m-18 9h18m-51 80h12m21 0h18m26-66 20-7m-16 19 20-7"/></g></svg></div>
+      <form class="resource-search" method="get" action="{% url 'resources:list' %}" role="search" aria-label="Search study resources">
+        {% if active_cat %}<input type="hidden" name="category" value="{{ active_cat }}">{% endif %}
+        <label class="sr-only" for="resource-search">Search titles and descriptions</label><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><input id="resource-search" type="search" name="search" value="{{ search }}" placeholder="Search notes, topics, a little inspiration..." maxlength="200"><button class="button button-green" type="submit">Search</button>
+      </form>
+      <div class="resource-results-heading"><h2 id="resources-title">{% if search %}Results for &ldquo;{{ search }}&rdquo;{% elif active_cat %}{% for value, label in categories %}{% if active_cat == value %}{{ label }}{% endif %}{% endfor %}{% else %}On the shelf{% endif %} <span class="count-pill">{{ resources|length }}</span></h2>{% if search or active_cat %}<a class="text-button" href="{% url 'resources:list' %}">Reset filters</a>{% else %}<span class="small muted">Newest first</span>{% endif %}</div>
+      {% if search %}<p class="resource-search-note">Searching titles and descriptions.{% if active_cat %} Within your selected category.{% endif %} <a class="text-button" href="{% url 'resources:list' %}{% if active_cat %}?category={{ active_cat|urlencode }}{% endif %}">Clear search</a></p>{% endif %}
+      <div class="resource-grid">
+        {% for resource in resources %}
+        <article class="resource-card card">
+          <div class="resource-card-top"><span class="resource-type-icon resource-type-{{ resource.category }}"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg></span><span class="resource-badge">{{ resource.get_category_display }}</span></div>
+          <h3><a href="{% url 'resources:open' resource.pk %}">{{ resource.title }}</a></h3><p class="resource-description">{{ resource.description|default:'A useful find from your campus community.'|truncatechars:160 }}</p>
+          <div class="resource-contributor">{% include 'components/avatar.html' with person=resource.contributor %}<div><span>{{ resource.contributor.get_short_name|default:resource.contributor.email }}</span><time datetime="{{ resource.created_at|date:'c' }}">{{ resource.created_at|date:'j M Y' }}</time></div></div>
+          <a class="resource-open" href="{% url 'resources:open' resource.pk %}" aria-label="View resource: {{ resource.title }}">View resource <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        {% empty %}
+        <div class="resource-empty card"><span class="resource-empty-icon"><svg class="icon" aria-hidden="true"><use href="{% if search or active_cat %}#i-search{% else %}#i-book{% endif %}"/></svg></span><h3>{% if search or active_cat %}Nothing on this shelf just yet.{% else %}A shared shelf starts with one link.{% endif %}</h3><p>{% if search or active_cat %}Try a different keyword or explore all resources.{% else %}Have notes, a useful tool or a favourite tutorial? Give your campus a head start.{% endif %}</p>{% if search or active_cat %}<a class="button button-outline" href="{% url 'resources:list' %}">Explore all resources</a>{% elif user.is_student %}<a class="button button-green" href="{% url 'resources:submit' %}">Share the first resource</a>{% endif %}</div>
+        {% endfor %}
+      </div>
+      {% if resources %}<p class="resource-end">A little shared knowledge. A little less figuring it out alone.</p>{% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

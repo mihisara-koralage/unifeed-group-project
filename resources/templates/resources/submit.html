@@ -1,0 +1,28 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Share a study resource{% endblock %}
+{% block page_class %}community-page resources-page{% endblock %}
+{% block breadcrumb %}Share a resource{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'css/resources.css' %}"><script src="{% static 'js/resources.js' %}" defer></script>{% endblock %}
+{% block content %}
+<div class="resource-form-layout">
+  <a class="resource-back" href="{% url 'resources:list' %}"><span aria-hidden="true">&larr;</span> Back to the study shelf</a>
+  <header class="resource-intro"><div><span class="eyebrow">PASS SOMETHING GOOD ALONG</span><h1>Make someone's study day<span class="orange-dot">.</span></h1><p>A helpful link today could be someone's light-bulb moment tomorrow.</p></div></header>
+  <div class="resource-form-columns">
+    <section class="card resource-form-card" aria-labelledby="share-title">
+      <h2 id="share-title">Share a study resource</h2><p class="muted">Tell us what it is and where to find it.</p>
+      <form method="post" action="{% url 'resources:submit' %}" data-resource-form>
+        {% csrf_token %}
+        {% if form.errors %}<div class="notice error" role="alert"><strong>A little adjustment needed.</strong> Please check the fields below.</div>{% endif %}
+        {% if form.non_field_errors %}<div class="field-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+        <div class="field-group"><label for="{{ form.title.id_for_label }}">Title <span aria-hidden="true">*</span></label>{{ form.title }}<p class="field-help" id="resource-title-help">A clear name helps others find this. Up to 200 characters.</p>{% if form.title.errors %}<div class="field-errors" id="resource-title-error">{{ form.title.errors }}</div>{% endif %}</div>
+        <div class="field-group"><label for="{{ form.url.id_for_label }}">Resource link <span aria-hidden="true">*</span></label>{{ form.url }}<p class="field-help" id="resource-url-help">Paste a full http:// or https:// link to Google Drive, Dropbox or another resource. Make sure others can access it.</p>{% if form.url.errors %}<div class="field-errors" id="resource-url-error">{{ form.url.errors }}</div>{% endif %}</div>
+        <div class="field-group"><label for="{{ form.category.id_for_label }}">Category <span aria-hidden="true">*</span></label>{{ form.category }}{% if form.category.errors %}<div class="field-errors" id="resource-category-error">{{ form.category.errors }}</div>{% endif %}</div>
+        <div class="field-group"><label for="{{ form.description.id_for_label }}">Description <span class="muted">(optional)</span></label>{{ form.description }}<div class="resource-description-help"><p class="field-help" id="resource-description-help">A quick note about what makes this useful.</p><span class="field-help" data-description-count>0 / 500</span></div>{% if form.description.errors %}<div class="field-errors" id="resource-description-error">{{ form.description.errors }}</div>{% endif %}</div>
+        <p class="resource-form-note">Required fields are marked *. Your name will appear with the resource.</p>
+        <div class="resource-form-actions"><a class="button button-outline" href="{% url 'resources:list' %}">Cancel</a><button class="button button-green" type="submit">Share resource <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button></div>
+      </form>
+    </section>
+    <aside class="resource-sharing-tips" aria-label="Sharing tips"><span class="resource-tip-icon"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg></span><span class="eyebrow">A GOOD RESOURCE IS A GIFT</span><h2>Useful to you.<br>Helpful to someone else.</h2><p>Lecture notes, past papers, tutorials, books and tools all have a place here.</p><ul><li>Give it a clear, descriptive title.</li><li>Check that the link opens for others.</li><li>Share material you have permission to share.</li></ul><p class="small">You're sharing a link. Files stay on the original website.</p></aside>
+  </div>
+</div>
+{% endblock %}

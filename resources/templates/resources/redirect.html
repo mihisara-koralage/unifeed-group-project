@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Open study resource{% endblock %}
+{% block page_class %}community-page resources-page{% endblock %}
+{% block breadcrumb %}Open resource{% endblock %}
+{% block head %}<link rel="stylesheet" href="{% static 'css/resources.css' %}">{% endblock %}
+{% block content %}
+<section class="resource-confirm card" aria-labelledby="resource-title">
+  <span class="resource-confirm-icon"><svg class="icon" aria-hidden="true"><use href="#i-external"/></svg></span>
+  <span class="eyebrow">YOUR NEXT GOOD FIND</span><h1 id="resource-title">{{ resource.title }}</h1><span class="resource-badge">{{ resource.get_category_display }}</span>
+  {% if resource.description %}<p class="resource-confirm-description">{{ resource.description|linebreaksbr }}</p>{% endif %}
+  <p class="small muted">Shared by {{ resource.contributor.get_short_name|default:resource.contributor.email }} &middot; {{ resource.created_at|date:'j M Y' }}</p>
+  <div class="resource-destination"><span class="eyebrow">EXTERNAL DESTINATION</span><p>{{ resource.url }}</p></div>
+  <h2>You're heading to another website.</h2><p class="muted">Check the destination before continuing. The resource opens in a new tab so you can keep your place here.</p>
+  <a class="button button-green button-full" href="{{ resource.url }}" target="_blank" rel="noopener noreferrer" data-external-resource>Open resource <svg class="icon" aria-hidden="true"><use href="#i-external"/></svg><span class="sr-only">(opens in a new tab)</span></a>
+  <a class="resource-back" href="{% url 'resources:list' %}"><span aria-hidden="true">&larr;</span> Back to directory</a>
+</section>
+{% endblock %}
