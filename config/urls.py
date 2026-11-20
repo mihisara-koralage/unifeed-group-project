@@ -25,6 +25,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('',       include('feed.urls')),
     path('messages/', include('messaging.urls')),
+    path('resources/', include('resources.urls')),
 ]
 
 if settings.DEBUG:
