@@ -23,6 +23,7 @@
         {% if user.is_authenticated %}
           <a class="nav-link {% if request.resolver_match.namespace == 'feed' %}active{% endif %}" href="{% url 'feed:home' %}"><svg class="icon"><use href="#i-grid"/></svg>Feed</a>
           <a class="nav-link {% if request.resolver_match.namespace == 'messaging' %}active{% endif %}" href="{% url 'messaging:inbox' %}"><svg class="icon"><use href="#i-chat"/></svg>Messages</a>
+          <a class="nav-link {% if request.resolver_match.namespace == 'resources' %}active{% endif %}" href="{% url 'resources:list' %}"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Resources</a>
           <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'users:profile' %}">{% include 'components/avatar.html' with person=user %}<span>My profile</span></a>
           <form action="{% url 'users:logout' %}" method="post">{% csrf_token %}<button type="submit" class="nav-link"><svg class="icon"><use href="#i-logout"/></svg>Sign out</button></form>
         {% else %}
