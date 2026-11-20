@@ -68,3 +68,37 @@
 - Empty and spaces-only posts were rejected.
 - Long post submission was rejected.
 - Comment, edit and delete options were unavailable during testing.
+
+
+## Module 3 – Real-Time Messaging
+
+**Testing Type:** Manual Functional Testing
+
+| Test ID | Test Scenario | Expected Result | Actual Result | Status |
+|---|---|---|---|---|
+| TC29 | Open Messages Page | Messages page should open successfully. | Messages page opened successfully. | PASS |
+| TC30 | View Conversations | Existing conversations should be displayed. | Conversation list displayed successfully. | PASS |
+| TC31 | Open a Conversation | Selected conversation should open successfully. | Conversation opened successfully. | PASS |
+| TC32 | Reconnect Chat | Chat should reconnect successfully. | Chat reconnected successfully using Daphne server. | PASS |
+| TC33 | Send Message | User should be able to send a message. | Message sent successfully. | PASS |
+| TC34 | Receive Message | Recipient should receive the message. | Message received successfully. | PASS |
+| TC35 | Real-Time Message Delivery | Messages should be delivered in real time. | Messages delivered between two accounts. | PASS |
+| TC36 | WebSocket Connection Stability | Chat connection should remain active without unexpected disconnection. | Connection disconnected after approximately 5 seconds. | FAIL |
+| TC37 | Message Persistence | Messages should remain visible after refreshing the conversation. | Previous messages remained visible after refresh. | PASS |
+| TC38 | Empty Message Validation | Empty messages should not be sent. | Empty messages were rejected. | PASS |
+| TC39 | Whitespace-only Message Validation | Spaces-only messages should not be sent. | Spaces-only messages were rejected. | PASS |
+| TC40 | Typing Indicator Display | Typing indicator should appear when another user is typing. | Typing indicator displayed successfully. | PASS |
+| TC41 | Typing Indicator Disappears | Typing indicator should disappear when the user stops typing. | Typing indicator disappeared successfully. | PASS |
+| TC42 | Unread Message Counter | Unread message count should be displayed. | Unread message counter displayed successfully. | PASS |
+| TC43 | Reset Unread Counter | Unread counter should reset after opening the conversation. | Unread counter disappeared after opening the conversation. | PASS |
+| TC44 | Unauthorized Conversation Access | Non-participants should not access private conversations. | Unauthorized access was denied. | PASS |
+
+### Module 3 Test Summary
+
+| Status | Count |
+|---|---:|
+| PASS | 15 |
+| FAIL | 1 |
+| BLOCKED | 0 |
+| N/A | 0 |
+| **Total** | **16** |
