@@ -454,7 +454,7 @@ git fetch origin
 Switch to your working branch:
 
 ```powershell
-git switch tester-Akeesha
+git switch "your Brach"
 ```
 
 Get the latest changes from the main branch:
